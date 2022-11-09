@@ -1,0 +1,16 @@
+---
+title: "MATH564 Project"
+author: "Santosh Reddy Edulapalle"
+date: "2022-11-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Inintial GitHub testing
+```{r}
+"Hello world!"
+```
+
