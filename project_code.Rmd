@@ -1,17 +1,31 @@
 ---
-title: "MATH564 Project"
-author: "Santosh Reddy Edulapalle and Zainab Hasnain"
+title: 
+- MATH564 Project
+- Predicting Medical Insurance Charges
+author: 
+- Santosh Reddy Edulapalle, A20501739
+- Zainab Hasnain, A20516879
 date: "2022-11-09"
 output: html_document
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Inintial GitHub testing
+
 ```{r}
-"Hello world!"
-"hello world 2"
+data = read.csv("expenses.csv")
+data$sex = as.factor(data$sex)
+data$smoker = as.factor(data$smoker)
+data$region = as.factor(data$region)
+head(data)
+str(data)
+```
+
+```{r}
+model = lm(charges ~., data = data)
+summary(model)
 ```
 
