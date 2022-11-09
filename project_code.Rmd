@@ -1,6 +1,6 @@
 ---
 title: "MATH564 Project"
-author: "Santosh Reddy Edulapalle"
+author: "Santosh Reddy Edulapalle and Zainab Hasnain"
 date: "2022-11-09"
 output: html_document
 ---
@@ -12,5 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 Inintial GitHub testing
 ```{r}
 "Hello world!"
+"hello world 2"
 ```
 
