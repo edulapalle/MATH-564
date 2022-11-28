@@ -29,3 +29,4 @@ model = lm(charges ~., data = data)
 summary(model)
 ```
 
+#testing git from santosh local machine
