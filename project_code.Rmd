@@ -14,19 +14,40 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Loading data:
 
 ```{r}
 data = read.csv("expenses.csv")
+#factorising columns
 data$sex = as.factor(data$sex)
 data$smoker = as.factor(data$smoker)
 data$region = as.factor(data$region)
 head(data)
+#data description
 str(data)
 ```
+Visualisation:
+
+```{r}
+library(corrplot)
+#correlation Matrix
+df.2 <- data[,c("age","bmi","children","charges")]
+#df.2
+cor_mat <- cor(df.2)
+# correlation graph
+corrplot(cor_mat,method = 'number')
+```
+Visulaising features to target (charges).
+```{r}
+plot(charges~.,data = data)
+#cor_mat1 <- cor(data)
+# correlation graph
+#corrplot(cor_mat1,method = 'number')
+```
+
 
 ```{r}
 model = lm(charges ~., data = data)
 summary(model)
 ```
 
-#testing git from santosh local machine
