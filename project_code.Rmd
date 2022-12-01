@@ -52,6 +52,20 @@ Key observations:
 5. Smoker-yes observations have very high insurance charges compared to non-smokers.
 6. Regional wise, all the regions have same median charges but comparitevly northwest and southwest regions have low wiskers than others.
 
+```{r}
+#plotting age vs charges with colour coding of smoker 
+ggplot(df,aes(charges,age,colour = as.factor(smoker)))+geom_point()
+```
+```{r}
+#plotting age vs charges with colour coding of smoker 
+ggplot(df,aes(charges,bmi,colour = as.factor(smoker)))+geom_point()
+```
+
+```{r}
+#plotting age vs charges with colour coding of smoker 
+ggplot(df,aes(charges,children,colour = as.factor(smoker)))+geom_point()
+```
+
 
 
 ```{r}
