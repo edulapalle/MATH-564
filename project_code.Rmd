@@ -17,29 +17,29 @@ knitr::opts_chunk$set(echo = TRUE)
 Loading data:
 
 ```{r}
-data = read.csv("expenses.csv")
+df = read.csv("expenses.csv")
 #factorising columns
-data$sex = as.factor(data$sex)
-data$smoker = as.factor(data$smoker)
-data$region = as.factor(data$region)
-head(data)
+df$sex = as.factor(df$sex)
+df$smoker = as.factor(df$smoker)
+df$region = as.factor(df$region)
+head(df)
 #data description
-str(data)
+str(df)
 ```
 Visualisation:
 
 ```{r}
 library(corrplot)
 #correlation Matrix
-df.2 <- data[,c("age","bmi","children","charges")]
-#df.2
-cor_mat <- cor(df.2)
+df.corr <- df[,c("age","bmi","children","charges")]
+#df.corr
+cor_mat <- cor(df.corr)
 # correlation graph
 corrplot(cor_mat,method = 'number')
 ```
 Visulaising features to target (charges).
 ```{r}
-plot(charges~.,data = data)
+plot(charges~.,data = df)
 
 ```
 As we can see from the above 6 graphs, the we can clearly find the relation between these features and the target variable insurance charges.
@@ -53,7 +53,63 @@ Key observations:
 
 
 ```{r}
-model = lm(charges ~., data = data)
-summary(model)
+#data splitting 80-20
+library(caTools)
+set.seed(108)
+split <- sample.split(df$charges,SplitRatio = 0.8) #charges is the target variable.
+df.train <- subset(df,split == T)
+df.test <- subset(df,split == F)
 ```
 
+# linear regression
+
+```{r}
+#linear regression model.
+model.lm <- lm(charges ~., data = df.train)
+summary(model.lm)
+```
+
+```{r}
+#predicitng new results
+y_pred.lm <- predict(model.lm, newdata = df.test)
+```
+
+```{r}
+#plotting the testing results
+library(ggplot2)
+ggplot()+ #observation points
+geom_point(aes(x = df.test$charges, y = y_pred.lm),colour = 'red') + # regression line
+#since we already made regression equation , we don't need to change the regression line graph.
+#geom_line(aes(x = df.train$charges, y = predict(model.lm, newdata = df.train)),colour = 'blue') +
+ggtitle('y_true vs y_pred: Test data') +
+xlab('y_true') +
+ylab('y_pred')
+```
+
+# glm
+
+```{r}
+#model
+model.glm <- glm(formula = charges ~., family = gaussian,data = df.train)
+#summary
+summary(model.glm)
+```
+
+
+```{r}
+#predicitng new results
+y_pred.glm <- predict(model.glm, newdata = df.test)
+```
+
+
+```{r}
+#plotting the testing results
+library(ggplot2)
+ggplot()+ #observation points
+geom_point(aes(x = df.test$charges, y = y_pred.glm),colour = 'red') + # regression line
+#since we already made regression equation , we don't need to change the regression line graph.
+#geom_line(aes(x = df.train$charges, y = predict(model.lm, newdata = df.train)),colour = 'blue') +
+ggtitle('y_true vs y_pred: Test data') +
+xlab('y_true') +
+ylab('y_pred')
+```
