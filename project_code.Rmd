@@ -40,10 +40,16 @@ corrplot(cor_mat,method = 'number')
 Visulaising features to target (charges).
 ```{r}
 plot(charges~.,data = data)
-#cor_mat1 <- cor(data)
-# correlation graph
-#corrplot(cor_mat1,method = 'number')
+
 ```
+As we can see from the above 6 graphs, the we can clearly find the relation between these features and the target variable insurance charges.
+Key observations:
+1. the charges are increasing proportional to the age of the person.
+2. Median charges is same for both male and female,but male observations have more Q3 and max whisker size indicating a border expense range.
+3. Observations with BMI of around 20-40 have least expense of < 15000 also to note that there are some outliers in these BMI range also.
+4. Number of children is inversely proportional to the charges.
+5. Smoker-yes observations have very high insurance charges compared to non-smokers.
+6. Regional wise, all the regions have same median charges but comparitevly northwest and southwest regions have low wiskers than others.
 
 
 ```{r}
