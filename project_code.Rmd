@@ -25,6 +25,7 @@ df$region = as.factor(df$region)
 head(df)
 #data description
 str(df)
+summary(df)
 ```
 Visualisation:
 
@@ -50,6 +51,16 @@ Key observations:
 4. Number of children is inversely proportional to the charges.
 5. Smoker-yes observations have very high insurance charges compared to non-smokers.
 6. Regional wise, all the regions have same median charges but comparitevly northwest and southwest regions have low wiskers than others.
+
+
+
+```{r}
+#pair plot of all variables with colour coding of Smoker.
+library(ggplot2)
+library(GGally)
+
+ggpairs(df,aes(colour = as.factor(smoker)),upper = list(continuous = wrap("cor", size = 2.5)))
+```
 
 
 ```{r}
