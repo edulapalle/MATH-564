@@ -53,21 +53,54 @@ Key observations:
 6. Regional wise, all the regions have same median charges but comparitevly northwest and southwest regions have low wiskers than others.
 
 ```{r}
-#plotting age vs charges with colour coding of smoker 
-ggplot(df,aes(charges,age,colour = as.factor(smoker)))+geom_point()
+library(ggplot2)
+library(patchwork)
+#smoker as factor
+#plotting charges vs numerical features with colour coding of smoker 
+p1 <- ggplot(df,aes(age,charges,colour = as.factor(smoker)))+geom_point()
+p2 <- ggplot(df,aes(bmi,charges,colour = as.factor(smoker)))+geom_point()
+p3 <- ggplot(df,aes(children,charges,colour = as.factor(smoker)))+geom_point()
+
+#subpots in ggpolot
+
+
+p1 + p2 + p3+ plot_layout( guides = "collect")
 ```
+
+
 ```{r}
-#plotting age vs charges with colour coding of smoker 
-ggplot(df,aes(charges,bmi,colour = as.factor(smoker)))+geom_point()
+#plotting with sex as factor
+
+#plotting charges vs numerical features with colour coding of sex 
+p1 <- ggplot(df,aes(age,charges,colour = as.factor(sex)))+geom_point()
+p2 <- ggplot(df,aes(bmi,charges,colour = as.factor(sex)))+geom_point()
+p3 <- ggplot(df,aes(children,charges,colour = as.factor(sex)))+geom_point()
+
+#subpots in ggpolot
+
+
+p1 + p2 + p3+ plot_layout( guides = "collect")
+
 ```
 
 ```{r}
-#plotting age vs charges with colour coding of smoker 
-ggplot(df,aes(charges,children,colour = as.factor(smoker)))+geom_point()
+#plotting with region as factor
+
+#plotting charges vs numerical features with colour coding of region 
+p1 <- ggplot(df,aes(age,charges,colour = as.factor(region)))+geom_point()
+p2 <- ggplot(df,aes(bmi,charges,colour = as.factor(region)))+geom_point()
+p3 <- ggplot(df,aes(children,charges,colour = as.factor(region)))+geom_point()
+
+#subpots in ggpolot
+
+
+p1 + p2 + p3+ plot_layout( guides = "collect")
 ```
 
 
+Conclusion:
 
+As we can see from the graphs above, only Smoker variable has significant effect on charges. We can see non-smokers with less charges than smokers. So, we will focus on Smoker variable than bmi and region.
 ```{r}
 #pair plot of all variables with colour coding of Smoker.
 library(ggplot2)
