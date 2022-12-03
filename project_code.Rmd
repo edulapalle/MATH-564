@@ -1,7 +1,6 @@
 ---
 title: 
-- MATH564 Project
-- Predicting Medical Insurance Charges
+- MATH564 - Predicting Medical Insurance Charges
 author: 
 - Santosh Reddy Edulapalle, A20501739
 - Zainab Hasnain, A20516879
@@ -18,11 +17,13 @@ Loading data:
 
 ```{r}
 df = read.csv("expenses.csv")
+
 #factorising columns
 df$sex = as.factor(df$sex)
 df$smoker = as.factor(df$smoker)
 df$region = as.factor(df$region)
 head(df)
+
 #data description
 str(df)
 summary(df)
@@ -35,22 +36,111 @@ library(corrplot)
 df.corr <- df[,c("age","bmi","children","charges")]
 #df.corr
 cor_mat <- cor(df.corr)
+#correlation matrix.
+cor_mat
 # correlation graph
 corrplot(cor_mat,method = 'number')
 ```
-Visulaising features to target (charges).
+
+
 ```{r}
+#splitting data frame to smoker yes
+smoker.df <- df[df$smoker == "yes",]
+#since this dataframe only contains smoker yes, we don't need that column/variable anymore.( regression model doesnot run with single unique value column)
+smoker.df = subset(smoker.df, select = -c(smoker) )
+#model
+smoker_model = lm(formula = smoker.df$charges ~ ., data = smoker.df)
+summary(smoker_model)
+
+
+#splitting data frame to smoker no
+non_smoker.df <- df[df$smoker == "no",]
+non_smoker.df = subset(non_smoker.df, select = -c(smoker) )
+#model
+non_smoker_model = lm(formula = non_smoker.df$charges ~ ., data = non_smoker.df)
+summary(non_smoker_model)
+
+```
+There is lot of difference between both the linear regression models (smoker vs non-smoker). When we find the summary of a smoker population, we find that age and BMI are the most statistically significant variables. Furthermore, the predictor variables explain the variation in the target variable up to 76% (adjusted R squared).
+
+Whereas, in the summary of the non-smoker population, we find that age, children, and southwest region are the most statistically significant variables. Moreover, the predictor variables explain the variation in the target variable up to 41% (adjusted R squared). This means the model is not good to predict charges for a new record.
+
+Adjusted R.sq values are 75.15% and 41.35% respectively for smoker and non-smoker datasets.
+
+
+
+```{r}
+#splitting data frame to male 
+male.df <- df[df$sex == "male",]
+#since this dataframe only contains male, we don't need that column/variable anymore.( regression model doesnot run with single unique value column)
+male.df = subset(male.df, select = -c(sex) )
+#model
+male.model = lm(formula = male.df$charges ~ ., data = male.df)
+summary(male.model)
+
+
+#splitting data frame to female 
+female.df <- df[df$sex == "female",]
+
+female.df = subset(female.df, select = -c(sex) )
+#model
+female.model = lm(formula = female.df$charges ~ ., data = female.df)
+summary(female.model)
+
+```
+Models for male vs female df does not have much difference in them. This means, that sex is not a significant factor. The different groups in this categorical variable so not affect the coefficients of other variable, meaning we can omit this variable for analysis. 
+
+```{r}
+#splitting data frame to southwest
+sw.df <- df[df$region == "southwest",]
+
+sw.df = subset(sw.df, select = -c(region) )
+#model
+sw_model = lm(formula = sw.df$charges ~ ., data = sw.df)
+summary(sw_model)
+
+#splitting data frame to southeast
+se.df <- df[df$region == "southeast",]
+
+se.df = subset(se.df, select = -c(region) )
+#model
+se_model = lm(formula = se.df$charges ~ ., data = se.df)
+summary(se_model)
+
+#splitting data frame to northwest
+nw.df <- df[df$region == "northwest",]
+
+nw.df = subset(nw.df, select = -c(region) )
+#model
+nw_model = lm(formula = nw.df$charges ~ ., data = nw.df)
+summary(nw_model)
+
+#splitting data frame to northeast
+ne.df <- df[df$region == "northeast",]
+
+ne.df = subset(ne.df, select = -c(region) )
+#model
+ne_model = lm(formula = ne.df$charges ~ ., data = ne.df)
+summary(ne_model)
+
+```
+
+Here, we can observe from the summary of the model based on regions, that other than southwest, the children variable has more significance in all other regional groups.
+
+Visualizing features to target (charges).
+```{r}
+par(mfrow=c(3,2))
 plot(charges~.,data = df)
 
 ```
 As we can see from the above 6 graphs, the we can clearly find the relation between these features and the target variable insurance charges.
 Key observations:
-1. the charges are increasing proportional to the age of the person.
-2. Median charges is same for both male and female,but male observations have more Q3 and max whisker size indicating a border expense range.
-3. Observations with BMI of around 20-40 have least expense of < 15000 also to note that there are some outliers in these BMI range also.
-4. Number of children is inversely proportional to the charges.
+1. The charges increase as the age of the person increases.
+2. Median charges is same for both male and female, but male observations havea higher upper quartile and max whisker size, indicating a broader expense range.
+3. BMI does not follow a linear trend with charges. There can be other factors involved or a higher order polynomial model can be used to model this relationship. 
+4. As the number of children increases, the charges decrease. 
 5. Smoker-yes observations have very high insurance charges compared to non-smokers.
-6. Regional wise, all the regions have same median charges but comparitevly northwest and southwest regions have low wiskers than others.
+6. Regional wise, all the regions have same median charges but northwest and southwest regions have relatively low whiskers.
 
 ```{r}
 library(ggplot2)
@@ -64,7 +154,7 @@ p3 <- ggplot(df,aes(children,charges,colour = as.factor(smoker)))+geom_point()
 #subpots in ggpolot
 
 
-p1 + p2 + p3+ plot_layout( guides = "collect")
+p1 + p2 + p3+ plot_layout( ncol = 2,guides = "collect")
 ```
 
 
@@ -79,7 +169,7 @@ p3 <- ggplot(df,aes(children,charges,colour = as.factor(sex)))+geom_point()
 #subpots in ggpolot
 
 
-p1 + p2 + p3+ plot_layout( guides = "collect")
+p1 + p2 + p3+ plot_layout(ncol =2, guides = "collect")
 
 ```
 
@@ -94,20 +184,13 @@ p3 <- ggplot(df,aes(children,charges,colour = as.factor(region)))+geom_point()
 #subpots in ggpolot
 
 
-p1 + p2 + p3+ plot_layout( guides = "collect")
+p1 + p2 + p3+ plot_layout(ncol=2, guides = "collect")
 ```
 
 
 Conclusion:
 
-As we can see from the graphs above, only Smoker variable has significant effect on charges. We can see non-smokers with less charges than smokers. So, we will focus on Smoker variable than bmi and region.
-```{r}
-#pair plot of all variables with colour coding of Smoker.
-library(ggplot2)
-library(GGally)
-
-ggpairs(df,aes(colour = as.factor(smoker)),upper = list(continuous = wrap("cor", size = 2.5)))
-```
+As we can see from the graphs above, only smoker variable has significant effect on charges. We can see non-smokers with less charges than smokers. So, we will focus on smoker variable than sex and region.
 
 
 ```{r}
@@ -119,7 +202,7 @@ df.train <- subset(df,split == T)
 df.test <- subset(df,split == F)
 ```
 
-# linear regression
+# Linear Regression
 
 ```{r}
 #linear regression model.
@@ -136,19 +219,22 @@ y_pred.lm <- predict(model.lm, newdata = df.test)
 #plotting the testing results
 library(ggplot2)
 ggplot()+ #observation points
-geom_point(aes(x = df.test$charges, y = y_pred.lm),colour = 'red') + # regression line
-#since we already made regression equation , we don't need to change the regression line graph.
-#geom_line(aes(x = df.train$charges, y = predict(model.lm, newdata = df.train)),colour = 'blue') +
-ggtitle('y_true vs y_pred: Test data') +
+geom_point(aes(x = df.test$charges, y = y_pred.lm),colour = 'red') + 
+ggtitle('y_true vs y_pred: Test data - Linear Regression') +
 xlab('y_true') +
 ylab('y_pred')
 ```
 
-# glm
+
+
+
+
+
+# GLM
 
 ```{r}
-#model
-model.glm <- glm(formula = charges ~., family = gaussian,data = df.train)
+#model GLM
+model.glm <- glm(formula = charges ~., family = gaussian(link = "identity"),data = df.train)
 #summary
 summary(model.glm)
 ```
@@ -164,10 +250,11 @@ y_pred.glm <- predict(model.glm, newdata = df.test)
 #plotting the testing results
 library(ggplot2)
 ggplot()+ #observation points
-geom_point(aes(x = df.test$charges, y = y_pred.glm),colour = 'red') + # regression line
-#since we already made regression equation , we don't need to change the regression line graph.
-#geom_line(aes(x = df.train$charges, y = predict(model.lm, newdata = df.train)),colour = 'blue') +
-ggtitle('y_true vs y_pred: Test data') +
+geom_point(aes(x = df.test$charges, y = y_pred.glm),colour = 'red') + 
+ggtitle('y_true vs y_pred: Test data - GLM') +
 xlab('y_true') +
 ylab('y_pred')
 ```
+
+
+Both, linear model and GLM model are very similar. They model the data fairly well, however, we can find more accurate models. The target of this study was to find the most significant factor which impacts the medical charges incurred, and our result shows that smoker variable is the most significant categorical variable. 
